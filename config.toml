@@ -1,0 +1,9 @@
+base_url = "https://savenkovigor.github.io/CppRepoPlaybook"
+title = "C++ Repo Playbook"
+description = "A playbook for setting up and maintaining C++ repositories."
+compile_sass = false
+build_search_index = false
+generate_feeds = false
+
+[markdown]
+highlight_code = true

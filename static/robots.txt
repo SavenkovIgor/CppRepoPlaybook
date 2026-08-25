@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://savenkovigor.github.io/CppRepoPlaybook/sitemap.xml
