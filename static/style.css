@@ -1,0 +1,77 @@
+:root {
+    --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+    --bg: oklch(20% 0.012 255);
+    --ink: oklch(92% 0.006 255);
+    --text-body: oklch(80% 0.008 255);
+    --text-muted: oklch(65% 0.01 255);
+    --border: oklch(32% 0.012 255);
+    --accent: oklch(68% 0.1 190);
+    --accent-text: oklch(72% 0.1 190);
+
+    --page-padding-x: 24px;
+    --page-padding-top: 72px;
+    --page-padding-bottom: 64px;
+    --content-max-width: 760px;
+}
+
+body {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: var(--page-padding-top) var(--page-padding-x) var(--page-padding-bottom);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+p,
+li {
+    color: var(--text-body);
+}
+
+a {
+    color: var(--accent-text);
+}
+
+article h1 {
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 20px;
+}
+
+code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    padding: 0.1rem 0.3rem;
+    background: oklch(28% 0.04 190);
+    border-radius: 3px;
+}
+
+pre {
+    font-family: var(--font-mono);
+    padding: 1rem;
+    overflow-x: auto;
+    background: oklch(28% 0.04 190);
+    border-radius: 6px;
+}
+
+pre code {
+    padding: 0;
+    background: none;
+}
+
+footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
