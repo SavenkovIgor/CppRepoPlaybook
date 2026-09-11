@@ -17,15 +17,12 @@ was skipped.
 1. **Confirm the target standard is C++17 or newer** before touching any
    file — check `CMAKE_CXX_STANDARD`, `set(CXX_STANDARD ...)`, or
    `-std=` compiler flags. If the project targets C++14 or earlier, stop
-   and say so; do not propose `string_view` there (correctness > modernity).
-2. **No dedicated deterministic tool covers this exact transform.**
-   clang-tidy has no `modernize-use-string-view` check (unlike
-   `modernize-use-nullptr` or `modernize-use-override`). Per this repo's
-   "deterministic tools priority" principle, check first whether
+   and say so; do not propose `string_view` there.
+2. **No clang-tidy check covers this exact transform** (unlike
+   `modernize-use-nullptr` or `modernize-use-override`). Check whether
    `performance-unnecessary-value-param` or `readability-*` already flag
-   the site for another reason — if so, fix that first — but do not wait
-   for tooling that doesn't exist; this skill performs a manual,
-   call-site-by-call-site audit instead.
+   a given site for another reason — if so, fix that first — then audit
+   the remaining call sites manually.
 
 ## Where the conversion is safe
 
