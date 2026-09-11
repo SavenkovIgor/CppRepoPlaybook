@@ -18,11 +18,15 @@ was skipped.
    file — check `CMAKE_CXX_STANDARD`, `set(CXX_STANDARD ...)`, or
    `-std=` compiler flags. If the project targets C++14 or earlier, stop
    and say so; do not propose `string_view` there.
-2. **No clang-tidy check covers this exact transform** (unlike
-   `modernize-use-nullptr` or `modernize-use-override`). Check whether
-   `performance-unnecessary-value-param` or `readability-*` already flag
-   a given site for another reason — if so, fix that first — then audit
-   the remaining call sites manually.
+2. **No clang-tidy check finds-and-rewrites this transform** (unlike
+   `modernize-use-nullptr` or `modernize-use-override`); call-site
+   selection below is still manual. But three bugprone checks catch the
+   exact hazard classes this skill guards against — enable them and
+   treat any warning as a failed candidate, not something to suppress:
+   `bugprone-dangling-handle` (view outliving its owner),
+   `bugprone-stringview-nullptr` (view constructed from `nullptr`),
+   `bugprone-suspicious-stringview-data-usage` (`.data()` used without
+   its `.size()`).
 
 ## Where the conversion is safe
 
@@ -73,11 +77,17 @@ site:
    similar mutation through the parameter, that call site is *not* a
    valid candidate — revert it to `std::string` rather than working
    around the missing mutability.
-6. Build and run the existing test suite. A `string_view` conversion
+6. Run clang-tidy with `bugprone-dangling-handle`,
+   `bugprone-stringview-nullptr`, and
+   `bugprone-suspicious-stringview-data-usage` enabled on the changed
+   files. Any new warning means the conversion was unsafe at that site —
+   revert it there rather than suppressing the warning.
+7. Build and run the existing test suite. A `string_view` conversion
    that compiles but changes lifetime behavior will not always fail to
-   compile — it fails at runtime (use-after-free) or under ASan/UBSan.
-   Prefer running with sanitizers enabled when available.
-7. Report, per function: converted / left as `std::string` and why.
+   compile or trip the checks above — it can still fail only at runtime
+   (use-after-free) or under ASan/UBSan. Prefer running with sanitizers
+   enabled when available.
+8. Report, per function: converted / left as `std::string` and why.
 
 ## Non-goals
 
