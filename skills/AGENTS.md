@@ -7,8 +7,9 @@ one.
 ## Principles are enforced through the skill's logic, not its prose
 
 The repo's principles (`../README.md`) — C++ is not C, deterministic
-tools priority, correctness > modernity, readability — are context every
-session already has. A skill must **act on them**, not **restate them**.
+tools priority, correctness over modernity, readability — are context
+that every session already has. A skill must act on them, not restate
+them.
 
 - Wrong: a paragraph like "per this repo's deterministic-tools-priority
   principle, we first check for a linter rule" followed by the check.

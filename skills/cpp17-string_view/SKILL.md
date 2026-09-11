@@ -31,15 +31,15 @@ was skipped.
 ## Where the conversion is safe
 
 Convert a parameter from `const std::string&` (or `const char*`) to
-`std::string_view` only when **all** of the following hold at every call
-site:
+`std::string_view` only when every one of the following holds at every
+call site:
 
-- The function only **reads** the characters during the call — no
-  storing the pointer/view in a member, container, or captured lambda
-  that outlives the call.
+- The function only reads the characters during the call — no storing
+  the pointer/view in a member, container, or captured lambda that
+  outlives the call.
 - The function never passes the data to an API that requires a
   null-terminated buffer (`printf`, `fopen`, most C APIs, `.c_str()`
-  users). `string_view` is **not** guaranteed null-terminated.
+  users). `string_view` carries no guarantee of null termination.
 - The function does not rely on implicit conversions from `const char*`
   through `std::string` for concatenation or mutation.
 - No embedded-NUL assumption is broken (`string_view` handles embedded
