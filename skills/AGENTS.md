@@ -60,6 +60,32 @@ which is true in one line:
   move on to the manual procedure. Don't justify why manual review is
   being used.
 
+## Verify tool claims, don't recall them
+
+Any sentence that says a check, flag, or tool exists — or doesn't —
+is a factual claim about the current state of an external project, not
+a stylistic choice. Model memory of clang-tidy/clang-format check names
+is unreliable in both directions: it invents plausible-sounding checks
+that don't exist, and misses real ones (a full grep of upstream
+`bugprone-*` docs turned up three checks directly relevant to
+`cpp17-string_view` that an earlier draft had missed entirely). Before
+a claim like this goes into a skill or a commit:
+
+- Fetch the actual upstream doc for the specific check name, not just a
+  directory listing or a search-result summary — those get
+  hallucinated wholesale when the underlying page is a 404 or otherwise
+  empty. A result is trustworthy when it quotes specific file content
+  (example code, exact option names); treat a vague or suspiciously
+  tidy summary as unverified and re-fetch the raw file directly.
+  A plain 404/error is trustworthy on its own — that's a real answer,
+  not a gap to paper over.
+- If the fetch is blocked or inconclusive, say in the skill (or to the
+  user) that the check's existence is unconfirmed rather than asserting
+  either way.
+- Re-verify before every commit that changes a tool-existence claim, not
+  just once when the skill was first drafted — check lists change
+  between LLVM releases.
+
 ## Budget and register
 
 - Target well under 150 lines. If a skill is approaching that, look for
@@ -70,6 +96,17 @@ which is true in one line:
   strive to...").
 - One skill = one feature/transform. Don't fold multiple standard
   library features into one SKILL.md; add a sibling skill instead.
+
+## plugin.json needs no per-skill entry
+
+Skills are auto-discovered: per the Agent Plugins 1.0 schema
+(`schemas/1.0.0/plugin.schema.json` in the spec repo), `plugin.json` has
+no `skills` field at all — a client finds each skill by reading
+`skills/{name}/SKILL.md` directly off disk. Adding or renaming a skill
+never requires touching `plugin.json`. If a future spec version adds a
+manifest field for this, verify it against the schema (per the rule
+above) before assuming it's now required — don't infer it from a
+changed example in prose.
 
 ## Naming
 
