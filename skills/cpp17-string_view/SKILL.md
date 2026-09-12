@@ -18,8 +18,7 @@ and literal-backed string constants without copying the underlying data.
   allocates and copies. A `constexpr std::string_view` from a literal
   resolves size and pointer at compile time — `std::string` can't,
   since its `const char*` constructor isn't `constexpr` before C++20.
-- **API clarity.** The parameter type itself says "read-only, no
-  ownership," instead of relying on the reader to notice the `const`.
+- **API clarity.** The parameter type itself says "read-only, no ownership,".
 - **Trade-off, not a pure win.** This is not an error-reduction change:
   it swaps a copy/allocation cost for a lifetime hazard (`const
   std::string&` cannot dangle the way a `string_view` can). That
@@ -36,12 +35,12 @@ per symbol — never convert silently, never skip without saying why.
 
 ## Preconditions
 
-Confirm the target standard is C++17 or newer — check
-`CMAKE_CXX_STANDARD`, `set(CXX_STANDARD ...)`, or `-std=` flags. Stop
-and say so on C++14 or earlier; do not propose `string_view` there.
+Confirm the target standard is >=17.Check `CMAKE_CXX_STANDARD`, 
+`set(CXX_STANDARD ...)`, or `-std=` flags. Stop and say so if it is not true.
 
 ## Tool usage
 
+Clang-tidy:
 - `bugprone-dangling-handle` — catches a view outliving its owner.
 - `bugprone-stringview-nullptr` — catches a view constructed from
   `nullptr`.
@@ -62,7 +61,7 @@ site:
 - The function only reads the characters during the call — no storing
   the pointer/view in a member, container, or captured lambda that
   outlives the call.
-- The function never passes the data to an API that requires a
+- The function never uses or passes the data to an API that requires a
   null-terminated buffer (`printf`, `fopen`, most C APIs, `.c_str()`
   users).
 - The function does not rely on implicit conversions from `const char*`
@@ -140,6 +139,6 @@ It also does not touch code guarded by a pre-C++17 standard.
 ## Links
 
 - [cppreference: std::basic_string_view](https://en.cppreference.com/cpp/string/basic_string_view) — language reference.
-- [bugprone-dangling-handle](https://raw.githubusercontent.com/llvm/llvm-project/main/clang-tools-extra/docs/clang-tidy/checks/bugprone/dangling-handle.md)
-- [bugprone-stringview-nullptr](https://raw.githubusercontent.com/llvm/llvm-project/main/clang-tools-extra/docs/clang-tidy/checks/bugprone/stringview-nullptr.md)
-- [bugprone-suspicious-stringview-data-usage](https://raw.githubusercontent.com/llvm/llvm-project/main/clang-tools-extra/docs/clang-tidy/checks/bugprone/suspicious-stringview-data-usage.md)
+- [bugprone-dangling-handle](https://clang.llvm.org/extra/clang-tidy/checks/bugprone/dangling-handle.html)
+- [bugprone-stringview-nullptr](https://clang.llvm.org/extra/clang-tidy/checks/bugprone/stringview-nullptr.html)
+- [bugprone-suspicious-stringview-data-usage](https://clang.llvm.org/extra/clang-tidy/checks/bugprone/suspicious-stringview-data-usage.html)
