@@ -35,31 +35,57 @@ description: <one sentence: what it does, when it fires, the standard it needs>
 
 Body sections, in this order, only the ones that apply:
 
-1. **Preconditions** — language-standard gate, project configuration to
-   check, anything that must be true before any edit starts.
-2. **Where it's safe** / **Where to leave it alone** — the concrete,
-   checkable conditions that separate a good call site from a bad one.
-   This is the load-bearing part of the skill; spend the words here, not
-   on introduction.
-3. **Procedure** — an ordered list of what the agent actually does.
-4. **Non-goals** — what this skill explicitly does not attempt, so it
-   doesn't get stretched to cover cases it wasn't designed for.
+1. **`# Feature`** (the H1) — one or two sentences: what it is, what
+   standard it needs.
+2. **Modernization benefits** — a bullet per real category (performance,
+   clarity, safety, ...). Don't force a category that doesn't apply. If
+   the feature trades one risk for another instead of only removing
+   risk (string_view trades copies for a dangling-view hazard), say the
+   trade-off plainly instead of listing a benefit that isn't real.
+3. **Goal** — one or two sentences on what the agent should end up
+   doing or producing. Not a restatement of the feature description;
+   the actionable version of it.
+4. **Preconditions** — language-standard gate, project configuration to
+   check, anything that blocks the skill from applying at all. Keep
+   this separate from Tool usage below — a precondition blocks the
+   whole skill, a tool result blocks one call site.
+5. **Tool usage** — state plainly what a deterministic tool actually
+   does here, then say what follows from that:
+   - Tool performs the whole transform → tell the agent to run it,
+     don't reimplement the rewrite in prose; the sections below still
+     apply only as a description of what the tool did/would do.
+   - Tool only catches hazards after the fact (as with the bugprone
+     checks for `string_view`) → say so, and make clear the sections
+     below always apply — the tool is a gate run during Procedure, not
+     an alternative to manual work.
+   - No tool exists → say so once and move straight to the sections
+     below.
+   Don't write "the manual sections apply only if the user declines the
+   tool" unless a tool genuinely performs the transform end to end;
+   that framing is false for a hazard-detector.
+6. **No-brainer replacements** — conditions under which the change is a
+   safe drop-in with no correctness trade-off. This is the load-bearing
+   section; spend the words here, not on introduction.
+7. **Discuss first** — changes that are possible but rest on an
+   assumption about the codebase the agent can't verify alone (ask,
+   don't guess and don't silently skip).
+8. **Refactor first** — a pattern the skill recognizes but never
+   modifies without approval, plus what would have to change first. If
+   nothing could ever make it safe (an external API needs a
+   null-terminated buffer), say that plainly instead of implying a
+   refactor path exists.
+9. **Procedure** — an ordered list of what the agent actually does.
+10. **Non-goals** — what this skill's *scope* excludes entirely (other
+    features, other standards, ABI boundaries), as distinct from the
+    specific patterns in Refactor first.
+11. **Links** — the standard/proposal reference for the feature, and a
+    direct link per tool check named above. Verify every link points at
+    real content (see "Verify tool claims" below) before citing it; if
+    a specific detail (a proposal number, a version) can't be verified
+    in the current session, link the stable reference page instead of
+    asserting the detail.
 
-Skip a section rather than fill it with filler. A skill with only
-Preconditions + Procedure is fine if the feature has no unsafe cases
-worth calling out.
-
-## Deterministic tools first, but say so plainly
-
-Before writing a manual procedure, check whether clang-tidy, clang-
-format, or a compiler warning already covers the transform. Then say
-which is true in one line:
-
-- A check exists → tell the agent to enable/run it, don't reimplement it
-  in prose.
-- No check exists → say so once ("no clang-tidy check covers this") and
-  move on to the manual procedure. Don't justify why manual review is
-  being used.
+Skip a section rather than fill it with filler.
 
 ## Verify tool claims, don't recall them
 
