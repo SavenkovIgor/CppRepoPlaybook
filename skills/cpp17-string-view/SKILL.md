@@ -1,12 +1,11 @@
 ---
-name: cpp17-string_view
+name: cpp17-string-view
 description: Replace read-only std::string parameters and literal-backed string constants with std::string_view (available since C++17) to remove needless copies, while guarding against the dangling-view and non-null-terminated-buffer bugs this change can introduce.
 ---
 
 # Modernize to `std::string_view` (C++17)
 
-`std::string_view` is a non-owning, non-null-terminated view over character
-data, available since C++17. It replaces `const std::string&` parameters
+`std::string_view` is a non-owning, non-zero-terminated view over character data, available since C++17. It replaces `const std::string&` parameters
 and literal-backed string constants without copying the underlying data.
 
 ## Modernization benefits
