@@ -152,4 +152,5 @@ automatically) — nor code guarded by a pre-C++17 standard.
 - [cppreference: std::basic_string_view](https://en.cppreference.com/cpp/string/basic_string_view) — language reference.
 - [bugprone-dangling-handle](https://clang.llvm.org/extra/clang-tidy/checks/bugprone/dangling-handle.html)
 - [bugprone-stringview-nullptr](https://clang.llvm.org/extra/clang-tidy/checks/bugprone/stringview-nullptr.html)
+- [lifetimebound](https://clang.llvm.org/docs/AttributeReference.html#lifetimebound)
 - [bugprone-suspicious-stringview-data-usage](https://clang.llvm.org/extra/clang-tidy/checks/bugprone/suspicious-stringview-data-usage.html)
