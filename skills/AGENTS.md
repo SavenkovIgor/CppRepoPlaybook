@@ -1,49 +1,47 @@
 # Writing skills in this repo
 
-Instructions for an agent authoring or editing a `skills/{name}/SKILL.md`
-file here. Read this before creating a new skill or editing an existing
-one.
+Instructions for an agent authoring or editing a `skills/{name}/SKILL.md` file here.
+Read this before creating a new skill or editing an existing one.
+Also read the `README.md` for the overarching principles and context.
+
+## Rules of skills creation/editing
 
 ## Principles are enforced through the skill's logic, not its prose
 
-The repo's principles (`../README.md`) — C++ is not C, deterministic
-tools priority, correctness over modernity, readability — are context
-that every session already has. A skill must act on them, not restate
-them.
+The repo's principles from the `README.md` are a guide on how to write a proper skill - not what text should be
+pasted in the skill - just write it in a way it conforms to these principles.
 
-- Wrong: a paragraph like "per this repo's deterministic-tools-priority
-  principle, we first check for a linter rule" followed by the check.
-- Right: just the check, stated as a fact about the specific feature
-  ("clang-tidy has no check for X, so this skill audits call sites
-  manually").
+- Wrong: a paragraph like "per this repo's deterministic-tools-priority principle, we first check for a linter rule".
+- Right: just the check, stated as a fact about the specific feature ("clang-tidy has no check for X,
+  so this skill audits call sites manually").
 
-If a sentence in a skill would still make sense with "per our principles"
-deleted from the front of it, delete that clause — it's the marker that
-the principle is being cited instead of applied. Quoting or paraphrasing
-README prose inside a skill body is pure token overhead: it teaches the
-model nothing about the C++ feature and gets re-read on every load of the
-skill.
+If a sentence in a skill would still make sense with "per our principles" deleted from the front of it, delete that clause — it's the marker that the principle is being cited instead of applied.
 
-## Required shape
+## Basic template for modernizing SKILL.md
 
 ```markdown
 ---
-name: <matches the directory name and follows the naming convention below>
-description: <one sentence: what it does, when it fires, the standard it needs>
+name: <`cpp<NN>-<feature>` matches the directory name and may only contain lowercase letters, numbers, and hyphens>
+description: <one sentence: what it does>
 ---
 
 # <Feature name>
 
 <One or two sentences: what it is, what standard it needs.>
 
-## Modernization benefits
+## Modernization
 
-- **<Aspect>.** <what improves and why>
+### Benefits
+
+- <Aspect>: <what improves and why>
+
+### Limitations
+
+- <Aspect>: <what the limitation is and why>
 
 ## Goal
 
-<One or two sentences: what the agent should end up doing or producing —
-the actionable version of the feature description, not a repeat of it.>
+<One or two sentences the agent flow - what info collect, what to ask from user, what to implement>
 
 ## Preconditions
 
@@ -53,115 +51,74 @@ tool result blocks one call site.>
 
 ## Tool usage
 
-- `<tool or check name>` — <what it actually does>
+<What tools could help in modernization and enforcement of applied changes
+It could be tools used during the modernization by Agent and tools that could
+be integrated into the project workflow (dev/ci) to enforce the changes>
 
-<What follows from the list above: run it and stop / it's a gate during
-Procedure / no tool exists, proceed manually.>
+<Tool name:>
+- `<tool or check name>`: <what it does>
+- `<another tool or check name>`: <what it does>
 
 ## No-brainer replacements
 
-<Conditions under which the change is a safe drop-in, no trade-off. The
-load-bearing section — spend the words here, not on introduction.>
+<Section for changes that are a safe drop-in, no trade-off>
 
 ## Discuss first
 
-<Changes that are possible but rest on an assumption about the codebase
-the agent can't verify alone. Ask, don't guess, don't silently skip.>
+<Section for changes that are possible but need approval from the user.
+Should contain specific questions to ask, details on what changes require user approval and why>
 
 ## Refactor first
 
-<A pattern the skill recognizes but never modifies without approval,
-plus what would have to change first.>
+<Section for changes that can't be applied right now and requires some amount
+of refactoring. Declare why the modernization can't be applied and what refactoring is necessary.
+These changes should be never applied without explicit approval from the user.>
 
 ## Procedure
 
 1. <ordered steps the agent actually takes>
 
-## Non-goals
+## Out of scope
 
-<What this skill's scope excludes entirely, distinct from the specific
-patterns in Refactor first.>
+<What should be out of scope for this skill and why>
 
 ## Links
 
-- <standard/proposal reference>
-- <one link per tool/check named in Tool usage>
+- <proposal reference>
+- <cppreference link: `https://en.cppreference.com/cpp/` or similar>
+- <tool/check link mentioned in the Tool usage section: `https://clang.llvm.org/extra/clang-tidy/checks` or similar>
 ```
 
-Skip a section rather than fill it with filler.
+### Some rules to apply to this template and comments on the content
 
-Three sections carry a rule that isn't obvious from the skeleton above:
-
-- **Modernization benefits.** The aspect label isn't a fixed enum
-  (`Performance`, `Correctness`, `Clarity`, `Bug reduction`, ... are
-  examples) — use whichever genuinely apply. If the feature trades one
-  risk for another instead of only removing risk (string_view trades
-  copies for a dangling-view hazard), say the trade-off plainly instead
-  of listing a benefit that isn't real.
-- **Tool usage.** Don't write "the manual sections apply only if the
-  user declines the tool" unless a tool genuinely performs the
-  transform end to end — that framing is false for a hazard-detector
-  (like the bugprone checks for `string_view`), where the sections
-  below always apply and the tool is only a gate.
-- **Refactor first.** If nothing could ever make a pattern safe (an
-  external API needs a null-terminated buffer), say that plainly
-  instead of implying a refactor path exists.
-- **Links.** Verify every link points at real content (see "Verify tool
-  claims" below) before citing it; if a specific detail (a proposal
-  number, a version) can't be verified in the current session, link the
-  stable reference page instead of asserting the detail.
+- Skip a section rather than fill it with filler
+- Modernization/benefits/limitations section: the aspect label isn't a fixed enum (`Performance`, `Correctness`,
+  `Clarity`, `Bug reduction`, etc) - use whichever genuinely apply. If the feature trades one risk for
+  another instead of only removing risk (string_view trades copies for a dangling-view hazard), you should say about the
+  trade-off plainly.
+- Tool usage. If modernization can be done with some tool instead of AI editing, this section is ideal place to say so.
+  If such tool exist, this section should contain a proposal to enable/integrate it instead of relying on AI editing.
+  If the tool provides additional benefits (security, performance, correctness), that is the second reason why it should be mentioned in this section but in this case it will be used as enforcement tool along with AI editing.
+- Links. Verify every link points at real content before citing it
 
 ## Verify tool claims, don't recall them
 
-Any sentence that says a check, flag, or tool exists — or doesn't —
-is a factual claim about the current state of an external project, not
-a stylistic choice. Model memory of clang-tidy/clang-format check names
-is unreliable in both directions: it invents plausible-sounding checks
-that don't exist, and misses real ones (a full grep of upstream
-`bugprone-*` docs turned up three checks directly relevant to
-`cpp17-string_view` that an earlier draft had missed entirely). Before
-a claim like this goes into a skill or a commit:
+Any statement that a check, flag, or tool exists — or doesn't — is a factual claim about upstream state, not style.
+Model memory is unreliable: it invents plausible-sounding names and misses real ones.
+Before writing such a claim into a skill or commit:
 
-- Fetch the actual upstream doc for the specific check name, not just a
-  directory listing or a search-result summary — those get
-  hallucinated wholesale when the underlying page is a 404 or otherwise
-  empty. A result is trustworthy when it quotes specific file content
-  (example code, exact option names); treat a vague or suspiciously
-  tidy summary as unverified and re-fetch the raw file directly.
-  A plain 404/error is trustworthy on its own — that's a real answer,
-  not a gap to paper over.
-- If the fetch is blocked or inconclusive, say in the skill (or to the
-  user) that the check's existence is unconfirmed rather than asserting
-  either way.
-- Re-verify before every commit that changes a tool-existence claim, not
-  just once when the skill was first drafted — check lists change
-  between LLVM releases.
+- Fetch the exact upstream docs for that specific item; don't rely on directory listings or summaries alone.
+- Treat raw file content or a clear 404/error as the trustworthy evidence. Vague summaries are not enough.
+- If the result is blocked or inconclusive, say the claim is unconfirmed rather than asserting either way.
+- Re-check before every commit that changes a tool-existence claim; upstream lists change between releases.
 
 ## Budget and register
 
-- Target well under 150 lines. If a skill is approaching that, look for
-  restated principles, restated standard-library documentation, or
-  redundant examples before adding a length exception.
-- Write for an agent, not a human reviewer: imperative, checklist-first,
-  no motivational framing ("it's important to...", "in modern C++ we
-  strive to...").
-- One skill = one feature/transform. Don't fold multiple standard
-  library features into one SKILL.md; add a sibling skill instead.
-
-## plugin.json needs no per-skill entry
-
-Skills are auto-discovered: per the Agent Plugins 1.0 schema
-(`schemas/1.0.0/plugin.schema.json` in the spec repo), `plugin.json` has
-no `skills` field at all — a client finds each skill by reading
-`skills/{name}/SKILL.md` directly off disk. Adding or renaming a skill
-never requires touching `plugin.json`. If a future spec version adds a
-manifest field for this, verify it against the schema (per the rule
-above) before assuming it's now required — don't infer it from a
-changed example in prose.
+- Target well under 150 lines. If a skill is approaching that, look for restated principles, restated standard-library
+  documentation, or redundant examples before adding a length exception.
+- One skill = one feature/transform. Don't fold multiple standard library features into one SKILL.md.
 
 ## Naming
 
-Directory and `name` field match: `cpp<NN>-<feature>`, e.g.
-`cpp17-string_view`. Use the feature's actual spelling (`string_view`,
-not `string-view`) when the hyphenated form would be a different token
-than the one engineers grep for.
+Directory and `name` field match: `cpp<NN>-<feature>`, e.g. `cpp17-string_view`.
+Use the feature's actual spelling but convert underscores to hyphens due to plugin naming conventions.
