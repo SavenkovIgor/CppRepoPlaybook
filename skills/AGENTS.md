@@ -26,70 +26,90 @@ skill.
 
 ## Required shape
 
-```
+```markdown
 ---
 name: <kebab-case, matches the directory name>
 description: <one sentence: what it does, when it fires, the standard it needs>
 ---
+
+# <Feature name>
+
+<One or two sentences: what it is, what standard it needs.>
+
+## Modernization benefits
+
+- **<Aspect>.** <what improves and why>
+
+## Goal
+
+<One or two sentences: what the agent should end up doing or producing —
+the actionable version of the feature description, not a repeat of it.>
+
+## Preconditions
+
+<What blocks the skill from applying at all: language standard, project
+config. Distinct from Tool usage below — this blocks the whole skill, a
+tool result blocks one call site.>
+
+## Tool usage
+
+- `<tool or check name>` — <what it actually does>
+
+<What follows from the list above: run it and stop / it's a gate during
+Procedure / no tool exists, proceed manually.>
+
+## No-brainer replacements
+
+<Conditions under which the change is a safe drop-in, no trade-off. The
+load-bearing section — spend the words here, not on introduction.>
+
+## Discuss first
+
+<Changes that are possible but rest on an assumption about the codebase
+the agent can't verify alone. Ask, don't guess, don't silently skip.>
+
+## Refactor first
+
+<A pattern the skill recognizes but never modifies without approval,
+plus what would have to change first.>
+
+## Procedure
+
+1. <ordered steps the agent actually takes>
+
+## Non-goals
+
+<What this skill's scope excludes entirely, distinct from the specific
+patterns in Refactor first.>
+
+## Links
+
+- <standard/proposal reference>
+- <one link per tool/check named in Tool usage>
 ```
 
-Body sections, in this order, only the ones that apply:
-
-1. **`# Feature`** (the H1) — one or two sentences: what it is, what
-   standard it needs.
-2. **Modernization benefits** — one bullet per real aspect, each led by
-   a short label naming what improves (`Performance`, `Correctness`,
-   `Clarity`, `Bug reduction`, ...). The label set isn't fixed — use
-   whichever genuinely apply and skip the rest. If the feature trades
-   one risk for another instead of only removing risk (string_view
-   trades copies for a dangling-view hazard), say the trade-off plainly
-   instead of listing a benefit that isn't real.
-3. **Goal** — one or two sentences on what the agent should end up
-   doing or producing. Not a restatement of the feature description;
-   the actionable version of it.
-4. **Preconditions** — language-standard gate, project configuration to
-   check, anything that blocks the skill from applying at all. Keep
-   this separate from Tool usage below — a precondition blocks the
-   whole skill, a tool result blocks one call site.
-5. **Tool usage** — open with a bullet list, one line per relevant
-   tool/check: name, then what it actually does (fixes it / only
-   detects one hazard class / etc). Follow the list with what that
-   implies:
-   - A tool performs the whole transform → tell the agent to run it,
-     don't reimplement the rewrite in prose; the sections below then
-     only describe what the tool did/would do.
-   - Tools only catch hazards after the fact (as with the bugprone
-     checks for `string_view`) → say so, and make clear the sections
-     below always apply — each tool is a gate run during Procedure, not
-     an alternative to manual work.
-   - No tool exists → say so once and move straight to the sections
-     below.
-   Don't write "the manual sections apply only if the user declines the
-   tool" unless a tool genuinely performs the transform end to end;
-   that framing is false for a hazard-detector.
-6. **No-brainer replacements** — conditions under which the change is a
-   safe drop-in with no correctness trade-off. This is the load-bearing
-   section; spend the words here, not on introduction.
-7. **Discuss first** — changes that are possible but rest on an
-   assumption about the codebase the agent can't verify alone (ask,
-   don't guess and don't silently skip).
-8. **Refactor first** — a pattern the skill recognizes but never
-   modifies without approval, plus what would have to change first. If
-   nothing could ever make it safe (an external API needs a
-   null-terminated buffer), say that plainly instead of implying a
-   refactor path exists.
-9. **Procedure** — an ordered list of what the agent actually does.
-10. **Non-goals** — what this skill's *scope* excludes entirely (other
-    features, other standards, ABI boundaries), as distinct from the
-    specific patterns in Refactor first.
-11. **Links** — the standard/proposal reference for the feature, and a
-    direct link per tool check named above. Verify every link points at
-    real content (see "Verify tool claims" below) before citing it; if
-    a specific detail (a proposal number, a version) can't be verified
-    in the current session, link the stable reference page instead of
-    asserting the detail.
-
 Skip a section rather than fill it with filler.
+
+Three sections carry a rule that isn't obvious from the skeleton above:
+
+- **Modernization benefits.** The aspect label isn't a fixed enum
+  (`Performance`, `Correctness`, `Clarity`, `Bug reduction`, ... are
+  examples) — use whichever genuinely apply. If the feature trades one
+  risk for another instead of only removing risk (string_view trades
+  copies for a dangling-view hazard), say the trade-off plainly instead
+  of listing a benefit that isn't real.
+- **Tool usage.** Don't write "the manual sections apply only if the
+  user declines the tool" unless a tool genuinely performs the
+  transform end to end — that framing is false for a hazard-detector
+  (like the bugprone checks for `string_view`), where the sections
+  below always apply and the tool is only a gate.
+- **Refactor first.** If nothing could ever make a pattern safe (an
+  external API needs a null-terminated buffer), say that plainly
+  instead of implying a refactor path exists.
+- **Links.** Verify every link points at real content (see "Verify tool
+  claims" below) before citing it; if a specific detail (a proposal
+  number, a version) can't be verified in the current session, link the
+  stable reference page instead of asserting the detail.
 
 ## Verify tool claims, don't recall them
 
