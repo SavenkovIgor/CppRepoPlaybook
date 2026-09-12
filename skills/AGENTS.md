@@ -37,11 +37,13 @@ Body sections, in this order, only the ones that apply:
 
 1. **`# Feature`** (the H1) — one or two sentences: what it is, what
    standard it needs.
-2. **Modernization benefits** — a bullet per real category (performance,
-   clarity, safety, ...). Don't force a category that doesn't apply. If
-   the feature trades one risk for another instead of only removing
-   risk (string_view trades copies for a dangling-view hazard), say the
-   trade-off plainly instead of listing a benefit that isn't real.
+2. **Modernization benefits** — one bullet per real aspect, each led by
+   a short label naming what improves (`Performance`, `Correctness`,
+   `Clarity`, `Bug reduction`, ...). The label set isn't fixed — use
+   whichever genuinely apply and skip the rest. If the feature trades
+   one risk for another instead of only removing risk (string_view
+   trades copies for a dangling-view hazard), say the trade-off plainly
+   instead of listing a benefit that isn't real.
 3. **Goal** — one or two sentences on what the agent should end up
    doing or producing. Not a restatement of the feature description;
    the actionable version of it.
@@ -49,14 +51,16 @@ Body sections, in this order, only the ones that apply:
    check, anything that blocks the skill from applying at all. Keep
    this separate from Tool usage below — a precondition blocks the
    whole skill, a tool result blocks one call site.
-5. **Tool usage** — state plainly what a deterministic tool actually
-   does here, then say what follows from that:
-   - Tool performs the whole transform → tell the agent to run it,
-     don't reimplement the rewrite in prose; the sections below still
-     apply only as a description of what the tool did/would do.
-   - Tool only catches hazards after the fact (as with the bugprone
+5. **Tool usage** — open with a bullet list, one line per relevant
+   tool/check: name, then what it actually does (fixes it / only
+   detects one hazard class / etc). Follow the list with what that
+   implies:
+   - A tool performs the whole transform → tell the agent to run it,
+     don't reimplement the rewrite in prose; the sections below then
+     only describe what the tool did/would do.
+   - Tools only catch hazards after the fact (as with the bugprone
      checks for `string_view`) → say so, and make clear the sections
-     below always apply — the tool is a gate run during Procedure, not
+     below always apply — each tool is a gate run during Procedure, not
      an alternative to manual work.
    - No tool exists → say so once and move straight to the sections
      below.

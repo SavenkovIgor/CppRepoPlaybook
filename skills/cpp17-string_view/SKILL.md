@@ -42,14 +42,16 @@ and say so on C++14 or earlier; do not propose `string_view` there.
 
 ## Tool usage
 
-No clang-tidy check performs this transform end to end — candidate
-selection is always manual. Three bugprone checks catch the hazard
-classes this skill guards against and belong in the build as a gate
-(Procedure step 6; see Links): `bugprone-dangling-handle` (view
-outliving its owner), `bugprone-stringview-nullptr` (view from
-`nullptr`), `bugprone-suspicious-stringview-data-usage` (`.data()`
-without `.size()`). Treat any warning from them as a failed candidate,
-not something to suppress.
+- `bugprone-dangling-handle` — catches a view outliving its owner.
+- `bugprone-stringview-nullptr` — catches a view constructed from
+  `nullptr`.
+- `bugprone-suspicious-stringview-data-usage` — catches `.data()` used
+  without `.size()`.
+
+None of the three perform the parameter/constant conversion itself —
+candidate selection is always manual. Enable all three as a gate during
+Procedure (step 6); treat any warning as a failed candidate at that
+site, not something to suppress.
 
 ## No-brainer replacements
 
@@ -137,7 +139,7 @@ It also does not touch code guarded by a pre-C++17 standard.
 
 ## Links
 
-- [cppreference: std::basic_string_view](https://en.cppreference.com/w/cpp/string/basic_string_view) — language reference.
+- [cppreference: std::basic_string_view](https://en.cppreference.com/cpp/string/basic_string_view) — language reference.
 - [bugprone-dangling-handle](https://raw.githubusercontent.com/llvm/llvm-project/main/clang-tools-extra/docs/clang-tidy/checks/bugprone/dangling-handle.md)
 - [bugprone-stringview-nullptr](https://raw.githubusercontent.com/llvm/llvm-project/main/clang-tools-extra/docs/clang-tidy/checks/bugprone/stringview-nullptr.md)
 - [bugprone-suspicious-stringview-data-usage](https://raw.githubusercontent.com/llvm/llvm-project/main/clang-tools-extra/docs/clang-tidy/checks/bugprone/suspicious-stringview-data-usage.md)
