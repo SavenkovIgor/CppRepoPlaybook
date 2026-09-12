@@ -28,7 +28,7 @@ skill.
 
 ```markdown
 ---
-name: <kebab-case, matches the directory name>
+name: <matches the directory name and follows the naming convention below>
 description: <one sentence: what it does, when it fires, the standard it needs>
 ---
 
