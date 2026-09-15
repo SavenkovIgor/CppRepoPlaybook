@@ -126,3 +126,19 @@ Directory and `name` field match. Two forms:
 - General best-practice skill, not tied to one standard: `<feature>` alone, no `std<NN>` prefix.
 
 Use the feature's actual spelling but convert underscores to hyphens due to plugin naming conventions.
+
+## Numbering modernization cases
+
+Number every `###` case heading under No-brainer replacements, Discuss first, and Refactor first, so a
+case can be referenced by a short id elsewhere (in discussion, in a cross-reference from another case, in
+a PR review comment) instead of restating its title. Numbering makes this easier - it isn't a section on
+its own.
+
+- Id shape: a 2-3 letter code for the feature, followed by a number starting at 1 - e.g. `SV1` for
+  `std17-string-view`, `OPT1` for `std17-optional`. Pick a code that reads as the feature's own
+  abbreviation, not a generic one.
+- One counter, shared across all three sections, in document order: No-brainer replacements first, then
+  Discuss first, then Refactor first. Don't restart the count per section.
+- Prefix the heading text: `### SV1: Read-only string function arguments`.
+- A case that refers to another case elsewhere in the same file (e.g. "that's a Refactor-first case
+  below") should name it by id instead (`that's SV6 below`), once both exist.
