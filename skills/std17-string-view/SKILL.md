@@ -54,7 +54,7 @@ at that site, not something to suppress.
 
 ## No-brainer replacements
 
-### Read-only string function arguments
+### SV1: Read-only string function arguments
 
 `void foo(const std::string& str);` → `void foo(std::string_view str);`
 
@@ -67,7 +67,7 @@ holds at every call site:
 - Doesn't rely on implicit `const char*` → `std::string` conversions for concatenation or mutation.
 - No embedded-NUL assumption is broken - flag and treat as unsafe if the code assumed `strlen`-style truncation.
 
-### Literal-backed constants
+### SV2: Literal-backed constants
 
 `static const char*       literal = "foo";` → `static constexpr std::string_view literal = "foo";`
 `static const std::string literal = "foo";` → `static constexpr std::string_view literal = "foo";`
@@ -79,7 +79,7 @@ Don't apply to a constant built from anything other than a literal
 
 ## Discuss first
 
-### `sv` literal suffix for string_view constants
+### SV3: `sv` literal suffix for string_view constants
 
 `constexpr std::string_view literal = "foo";` -> `constexpr auto literal = "foo"sv;`
 
@@ -88,7 +88,7 @@ Whether to bring in the `sv` literal suffix (`using namespace std::literals::str
 narrower `operator""sv` using-declaration) to write `constexpr static auto key = "someKey"sv;`.
 Since any form of this is a compile-time constant, this is style, not correctness decision.
 
-### Getter returning a view on an object member
+### SV4: Getter returning a view on an object member
 
 `const std::string& getMember() const;` -> `[[clang::lifetimebound]] std::string_view getMember() const;`
 
@@ -101,7 +101,7 @@ A method returning `std::string_view` into `*this`'s own member has the same dan
 To reduce the risk of dangling views that outlive the parent object, you could use clang's `[[clang::lifetimebound]]`
 attribute on the getter and enable the compiler check to enforce the lifetime bound (check the link if needed).
 
-### Enum to string conversions
+### SV5: Enum to string conversions
 
 `enum class Color { Red, Green, Blue };`
 `std::string toString(Color color);` -> `std::string_view toString(Color color);`
@@ -113,7 +113,7 @@ some special cases that require string manipulations. Cuz in this case it is str
 
 ## Refactor first
 
-### Call sites needing a zero-terminated buffer somewhere
+### SV6: Call sites needing a zero-terminated buffer somewhere
 
 - No universal refactor path exists here - the constraint is on external API.
   Highlight the problem to the user, propose fix but keep `std::string`/`const char*` by default.
