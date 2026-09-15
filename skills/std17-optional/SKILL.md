@@ -58,23 +58,23 @@ not something to suppress.
 
 ## No-brainer replacements
 
-### Sentinel-value return
+### OPT1: Sentinel-value return
 
 `int find(...); // returns -1 when not found` → `std::optional<int> find(...);`
 
 Convert when the sentinel is not a valid in-domain value, and every call site only ever compares the
 result against the sentinel (no arithmetic that assumes a value is present).
 
-### `bool` return plus out-parameter
+### OPT2: `bool` return plus out-parameter
 
 `bool tryGet(T& out);` → `std::optional<T> tryGet();`
 
 Convert when `T` is cheap enough to move/copy out, and the out-parameter exists only to carry the result -
-not to reuse caller-owned storage across repeated calls (that's a Refactor-first case below).
+not to reuse caller-owned storage across repeated calls (that's OPT5 below).
 
 ## Discuss first
 
-### Nullable pointer meaning "no value", not aliasing
+### OPT3: Nullable pointer meaning "no value", not aliasing
 
 `const Config* findConfig(...);` (returns a pointer into an internally-owned object) → `std::optional<Config>`
 
@@ -84,7 +84,7 @@ identity (comparing addresses, or expecting the pointee to observe mutations thr
 If either holds, `std::optional<std::reference_wrapper<const Config>>` keeps the optionality without a
 copy - propose it as the alternative and let the user pick.
 
-### Class member conversion
+### OPT4: Class member conversion
 
 Changing a member from a nullable pointer or a flag+value pair to `optional<T>` changes the class's
 default-constructed state and can implicitly enable copyability the pointer version didn't have. Confirm
@@ -92,17 +92,16 @@ with the user before touching a member whose enclosing class has hand-written co
 
 ## Refactor first
 
-### Out-parameter used to reuse caller-owned storage
+### OPT5: Out-parameter used to reuse caller-owned storage
 
 An out-parameter kept to avoid a per-call allocation (e.g. filling a caller's buffer in a hot loop) can't
 become an `optional<T>` return without losing that reuse. Highlight the cost, propose it, but keep the
 out-parameter by default unless the user accepts the extra allocation.
 
-### Code relying on pointer identity
+### OPT6: Code relying on pointer identity
 
-If a nullable-pointer call site needs the returned pointer's identity or aliasing (Discuss first above
-confirmed it), the conversion doesn't apply - out of scope for this skill until that dependency is
-refactored away.
+If a nullable-pointer call site needs the returned pointer's identity or aliasing (OPT3 confirmed it),
+the conversion doesn't apply - out of scope for this skill until that dependency is refactored away.
 
 ## Procedure
 
