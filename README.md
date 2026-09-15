@@ -1,6 +1,6 @@
-# CppRepoPlaybook
+# Modernize C++
 
-This repo contains AI plugin skills that are focused on modernizing codebase to the latest C++ standards and best practices.
+AI plugin skills focused on modernizing a C++ codebase — each skill targets either a specific language standard feature or a general C++ best practice.
 
 ## Principles
 

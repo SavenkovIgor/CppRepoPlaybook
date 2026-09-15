@@ -1,12 +1,12 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "cpp-std",
+  "name": "modernize-cpp",
   "version": "0.1.0",
   "author": {
     "name": "Savenkov Igor"
   },
-  "description": "Skills for migrating C++ code between language standards, one skill per feature of a specific standard.",
-  "homepage": "https://github.com/SavenkovIgor/CppRepoPlaybook",
-  "repository": "https://github.com/SavenkovIgor/CppRepoPlaybook",
+  "description": "Skills for modernizing C++ code to specific language standards and general best practices, one skill per feature or practice.",
+  "homepage": "https://github.com/SavenkovIgor/modernize-cpp",
+  "repository": "https://github.com/SavenkovIgor/modernize-cpp",
   "keywords": ["cpp", "c++", "migration", "standards", "modernization"]
 }

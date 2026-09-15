@@ -1,5 +1,5 @@
 ---
-name: cpp17-string-view
+name: std17-string-view
 description: Replace read-only std::string parameters and literal-backed string constants with std::string_view (available since C++17) to remove needless copies, while guarding against the dangling-view and non-null-terminated-buffer bugs this change can introduce.
 ---
 

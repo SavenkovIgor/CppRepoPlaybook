@@ -21,7 +21,7 @@ If a sentence in a skill would still make sense with "per our principles" delete
 
 ```markdown
 ---
-name: <`cpp<NN>-<feature>` matches the directory name and may only contain lowercase letters, numbers, and hyphens>
+name: <`std<NN>-<feature>` for a standard-specific skill, or `<feature>` for a general C++ best-practice skill not tied to one standard; matches the directory name and may only contain lowercase letters, numbers, and hyphens>
 description: <one sentence: what it does>
 ---
 
@@ -120,5 +120,9 @@ Before writing such a claim into a skill or commit:
 
 ## Naming
 
-Directory and `name` field match: `cpp<NN>-<feature>`, e.g. `cpp17-string_view`.
+Directory and `name` field match. Two forms:
+
+- Standard-specific skill: `std<NN>-<feature>`, e.g. `std17-string-view` for `string_view`.
+- General best-practice skill, not tied to one standard: `<feature>` alone, no `std<NN>` prefix.
+
 Use the feature's actual spelling but convert underscores to hyphens due to plugin naming conventions.
