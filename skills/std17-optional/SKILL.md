@@ -22,9 +22,13 @@ to mean "no value", making optionality part of the signature instead of a conven
 
 ### Limitations
 
-- Performance trade-off: `sizeof(std::optional<T>)` is never smaller than `sizeof(T)` and commonly adds
-  a full alignment unit for the engaged flag; returning/copying `optional<T>` by value always
-  copies/moves the whole `T`, unlike a pointer.
+- Performance trade-off: `sizeof(std::optional<T>)` is never smaller than `sizeof(T)`, commonly adds a
+  full alignment unit for the engaged flag, and returning/copying `optional<T>` by value always
+  copies/moves the whole `T` - a `T*` skips that copy. It cuts the other way too: a `T*` into a
+  separately-allocated object is a pointer chase, a likely cache miss on every dereference; `optional<T>`
+  stores its payload inline with the optional itself (stack, member, or container slot), so reading it
+  needs no extra indirection. Which side wins depends on `T`'s size and how often the value is read
+  versus passed around unread - measure, don't assume either direction by default.
 - Safety trade-off: replacing a pointer with `optional<T>` changes reference semantics to value semantics -
   the caller gets an independent copy, not an alias into the original object. Code relying on pointer
   identity or on mutating through the pointer breaks silently if converted.
